@@ -9,15 +9,25 @@ export default async function NuxtMarkdown(moduleOptions) {
   })
 
   const state = {}
+  const routes = []
 
-  options.collections.forEach((collection) => {
+  // Get current routes from configuration
+  // TODO: Would extendRoutes be better for this?
+  if (typeof this.options.generate.routes === 'function') {
+    routes.push(...await this.options.generate.routes())
+  } else if (Array.isArray(this.options.generate.routes)) {
+    routes.push(this.options.generate.routes)
+  }
+
+  // Loop through each collection
+  for (const collection of options.collections) {
     state[collection.name] = []
 
     // TODO: Use glob.hasMagic to check collection directory
     const pattern = collection.includeSubdirectories ? '{,**/}*.md' : '*.md'
     const files = glob.sync(pattern, { cwd: collection.directory })
 
-    files.forEach((file) => {
+    for (const file of files) {
       // TODO: Allow configuration of gray-matter
       const markdown = matter.read(path.join(collection.directory, file))
 
@@ -42,7 +52,7 @@ export default async function NuxtMarkdown(moduleOptions) {
       }
 
       state[collection.name].push(markdown)
-    })
+    }
 
     if (typeof collection.transformCollection === 'function') {
       state[collection.name] = await collection.transformCollection(
@@ -50,8 +60,19 @@ export default async function NuxtMarkdown(moduleOptions) {
       )
     }
 
-    state[collection.name] = state[collection.name].map(({ data }) => data)
-  })
+    // Add new routes to generate
+    routes.push(...state[collection.name].map(({ data }) => data.route))
 
-  console.log(state)
+    // Only add the front matter to state
+    state[collection.name] = state[collection.name].map(({ data }) => data)
+  }
+
+  this.options.generate.routes = routes
+
+  this.addPlugin({
+    src: path.resolve(__dirname, 'plugin.js'),
+    options: {
+      state: JSON.stringify(state)
+    }
+  })
 }
