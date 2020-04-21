@@ -1,0 +1,21 @@
+{
+  "name": "nuxt-markdown",
+  "version": "0.0.1",
+  "description": "Nuxt module to add Markdown support to your site",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gregives/nuxt-markdown.git"
+  },
+  "author": "Greg Ives",
+  "bugs": {
+    "url": "https://github.com/gregives/nuxt-markdown/issues"
+  },
+  "homepage": "https://github.com/gregives/nuxt-markdown#readme",
+  "dependencies": {
+    "gray-matter": "^4.0.2"
+  }
+}
