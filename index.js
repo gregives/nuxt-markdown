@@ -4,11 +4,9 @@ import matter from 'gray-matter'
 
 export default async function NuxtMarkdown(moduleOptions) {
   // TODO: Validate module options
-  const options = Object.assign({}, this.options.markdown, moduleOptions, {
-    router: this.options.router
-  })
+  const options = Object.assign({}, this.options.markdown, moduleOptions)
 
-  const state = {}
+  const collections = {}
   const routes = []
 
   // Get current routes from configuration
@@ -19,9 +17,14 @@ export default async function NuxtMarkdown(moduleOptions) {
     routes.push(this.options.generate.routes)
   }
 
+  // Allow user to generate own routes
+  const generateRoutes = function(...newRoutes) {
+    routes.push(...newRoutes)
+  }
+
   // Loop through each collection
   for (const collection of options.collections) {
-    state[collection.name] = []
+    collections[collection.name] = []
 
     // TODO: Use glob.hasMagic to check collection directory
     const pattern = collection.includeSubdirectories ? '{,**/}*.md' : '*.md'
@@ -34,45 +37,68 @@ export default async function NuxtMarkdown(moduleOptions) {
       // Add slug and route to front matter
       // TODO: Does anything else need to be added to the front matter?
       const { dir, name } = path.parse(file)
-      markdown.data.slug = name
+      markdown.data.file = path
+        .relative(options.directory, path.join(collection.directory, dir, name))
+        .split(path.sep)
+        .join('/')
+        .replace(/\.md$/, '')
 
       // TODO: Test routes for
       // - Platform-specific paths
       // - Trailing slash
       // - Base URL
-      markdown.data.route = path
-        .join(options.router.base, path.sep, collection.routePrefix, dir, name)
+      markdown.data.path = path
+        .join(this.options.router.base, path.sep, collection.routePrefix, dir, name)
         .split(path.sep)
         .join('/')
         .replace(/index$/, '')
 
       // Add trailing slash
-      if (options.router.trailingSlash && markdown.data.route.substr(-1) !== '/') {
-        markdown.data.route += '/'
+      if (this.options.router.trailingSlash && markdown.data.path.substr(-1) !== '/') {
+        markdown.data.path += '/'
       }
 
-      state[collection.name].push(markdown)
+      collections[collection.name].push(markdown)
     }
 
     if (typeof collection.transformCollection === 'function') {
-      state[collection.name] = await collection.transformCollection(
-        state[collection.name]
+      collections[collection.name] = await collection.transformCollection(
+        collections[collection.name], {
+          generateRoutes
+        }
       )
     }
 
     // Add new routes to generate
-    routes.push(...state[collection.name].map(({ data }) => data.route))
+    routes.push(...collections[collection.name].map(({ data }) => data.path))
 
     // Only add the front matter to state
-    state[collection.name] = state[collection.name].map(({ data }) => data)
+    collections[collection.name] = collections[collection.name].map(({ data }) => data)
   }
 
   this.options.generate.routes = routes
 
+  // Add frontmatter-markdown-loader in Vue component mode
+  this.extendBuild(function (config) {
+    config.module.rules.unshift({
+      test: /\.md$/,
+      loader: 'frontmatter-markdown-loader',
+      options: {
+        mode: ['vue-component'],
+        // TODO: Allow custom markdown-it configuration
+        vue: {
+          // TODO: Allow option to change root class name
+          root: 'markdown'
+        }
+      }
+    })
+  })
+
   this.addPlugin({
     src: path.resolve(__dirname, 'plugin.js'),
     options: {
-      state: JSON.stringify(state)
+      collections: JSON.stringify(collections),
+      directory: options.directory
     }
   })
 }

@@ -16,6 +16,7 @@
   },
   "homepage": "https://github.com/gregives/nuxt-markdown#readme",
   "dependencies": {
+    "frontmatter-markdown-loader": "^3.3.0",
     "gray-matter": "^4.0.2"
   }
 }
