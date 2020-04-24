@@ -6,6 +6,7 @@
     "nuxt",
     "nuxt.js",
     "markdown",
+    "module",
     "blog"
   ],
   "main": "lib/module.js",
