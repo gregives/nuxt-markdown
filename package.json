@@ -1,29 +1,47 @@
 {
   "name": "nuxt-markdown",
   "version": "1.0.0-alpha",
-  "description": "Highly-configurable Markdown module for Nuxt",
+  "description": "Highly-configurable Markdown module for Nuxt.js",
   "keywords": [
     "nuxt",
+    "nuxt-module",
     "nuxt.js",
     "markdown",
-    "module",
     "blog"
+  ],
+  "repository": "gregives/nuxt-markdown",
+  "license": "MIT",
+  "author": "Greg Ives <greg@gregives.co.uk> (https://gregives.co.uk)",
+  "files": [
+    "lib"
   ],
   "main": "lib/module.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nuxt example",
+    "lint": "eslint --ext .js,.vue .",
+    "release": "yarn test && standard-version && git push --follow-tags && npm publish",
+    "test": "yarn lint && jest"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gregives/nuxt-markdown.git"
-  },
-  "author": "Greg Ives <greg@gregives.co.uk> (https://gregives.co.uk)",
-  "bugs": {
-    "url": "https://github.com/gregives/nuxt-markdown/issues"
-  },
-  "homepage": "https://github.com/gregives/nuxt-markdown#readme",
   "dependencies": {
     "frontmatter-markdown-loader": "^3.3.0",
     "gray-matter": "^4.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "latest",
+    "@babel/preset-env": "latest",
+    "@commitlint/cli": "latest",
+    "@commitlint/config-conventional": "latest",
+    "@nuxtjs/eslint-config": "latest",
+    "@nuxtjs/module-test-utils": "latest",
+    "babel-eslint": "latest",
+    "babel-jest": "latest",
+    "eslint": "latest",
+    "husky": "latest",
+    "jest": "latest",
+    "nuxt": "^2.12.2",
+    "standard-version": "latest"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

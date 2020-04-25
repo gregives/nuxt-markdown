@@ -1,8 +1,31 @@
-# Nuxt Markdown Module
+# Nuxt Markdown
 
-[![npm](https://img.shields.io/npm/v/nuxt-markdown?style=flat-square)](https://www.npmjs.com/package/nuxt-markdown)
+[![npm version][npm-version-src]][npm-version-href]
+[![npm downloads][npm-downloads-src]][npm-downloads-href]
+[![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
+[![Codecov][codecov-src]][codecov-href]
+[![License][license-src]][license-href]
 
-Nuxt Markdown is a simple but highly-configurable Nuxt.js module which allows you to use Markdown files for the content of your website. This makes it the perfect module to port your site over from Jekyll, or another static site generator.
+> Nuxt Markdown is a simple but highly-configurable Nuxt.js module which allows you to use Markdown files for the content of your website. This makes it the perfect module to port your site over from Jekyll, or another static site generator.
+
+<details>
+<summary>Contents</summary>
+
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Configuration](#configuration)
+    - [Collections](#collections)
+        - [`name`](#name)
+        - [`directory`](#directory)
+        - [`includeSubdirectories`](#includesubdirectories)
+        - [`routePrefix`](#routeprefix)
+        - [`serverTransform`](#servertransform)
+        - [`clientTransform`](#clienttransform)
+- [Example](#example)
+- [Development](#development)
+- [License](#license)
+
+</details>
 
 ## Features
 
@@ -10,21 +33,23 @@ Nuxt Markdown is a simple but highly-configurable Nuxt.js module which allows yo
 - Highly-configurable when you want it to be
 - Supports static site generation
 - Nested heirarchy of Markdown content
-- **Put Vue components in your Markdown**
+- **Use Vue components in your Markdown**
 - Access and transform the front matter in your Markdown
-- Uses [markdown-it](https://github.com/markdown-it/markdown-it) which you can configure
+- Uses [markdown-it](https://github.com/markdown-it/markdown-it) and [gray-matter](https://github.com/jonschlinkert/gray-matter) which you can configure
 - Supports excerpts of Markdown files
 - Easy to create taxonomy pages
 
-## Get Started
+## Getting Started
 
-Install `nuxt-markdown` as a `devDependency`
+1. Add `nuxt-markdown` as a `devDependency` to your project
 
 ```bash
+yarn add nuxt-markdown --dev
+# Or
 npm install nuxt-markdown --save-dev
 ```
 
-Add `nuxt-markdown` as a `buildModule` in your `nuxt.config.js`
+2. Add `nuxt-markdown` to the `buildModules` section of `nuxt.config.js`
 
 ```js
 export default {
@@ -32,7 +57,7 @@ export default {
 }
 ```
 
-Now make a `content` directory and add some Markdown files to it, feel free to add some nested directories as well. You'll also need to create your Nuxt.js pages where you want to show your content.
+3. Make a `content` directory and add some Markdown files to it, feel free to add some nested directories as well. You'll also need to create a corresponding Nuxt.js page in which you can access your Markdown content.
 
 ```
 ├── content
@@ -47,30 +72,42 @@ Now make a `content` directory and add some Markdown files to it, feel free to a
 └── nuxt.config.js
 ```
 
-Finally, use the `$markdown` functions to render your Markdown files and display any metadata!
+4. Nuxt Markdown injects `$markdown` into the context and Vue instances of your app. By default, `$markdown` exposes:
+
+    - `$markdown.content`: an array of the front matter from all of the Markdown files inside your `content` directory.
+    - `$markdown.loadContent()`: function to load the content of the Markdown file corresponding to the current route. Returns a Vue component, which can be used as a dynamic `component`.
+    - `$markdown.loadData()`: function to load the front matter of the Markdown file corresponding to the current route.
 
 ```vue
 <template>
-  <div>
-    {{ frontMatter.title }}
-    <component :is="content" />
-  </div>
+  <main>
+    <h1>{{ blogPostFrontMatter.title }}</h1>
+    <component :is="blogPostContent" />
+    <ul>
+      <li v-for="blogPost in allBlogPosts" :key="blogPost.path">
+        <nuxt-link :to="blogPost.path">
+          {{ blogPost.title }}
+        </nuxt-link>
+      </li>
+    </ul>
+  </main>
 </template>
 
 <script>
 export default {
   asyncData({ app }) {
     return {
-      frontMatter: app.$markdown.loadData()
+      allBlogPosts: app.$markdown.content,
+      blogPostFrontMatter: app.$markdown.loadData()
     }
   },
   data() {
     return {
-      content: null
+      blogPostContent: null
     }
   },
   created() {
-    this.content = () => this.$markdown.loadContent()
+    this.blogPostContent = () => this.$markdown.loadContent()
   }
 }
 </script>
@@ -95,14 +132,14 @@ export default {
 
 Nuxt Markdown allows you to have multiple `collections` of Markdown files. Each collection is described by a configuration object. Here are the configuration options for a collection:
 
-| Name                    | Description                                         | Type       |
-|-------------------------|-----------------------------------------------------|------------|
-| `name`                  | Name of the collection                              | `String`   |
-| `directory`             | Directory of the Markdown files                     | `String`   |
-| `includeSubdirectories` | If the collection should include nested directories | `Boolean`  |
-| `routePrefix`           | Prefix of the collection routes                     | `String`   |
-| `serverTransform`       | Function to transform the collection on the server  | `Function` |
-| `clientTransform`       | Function to transform the collection on the client  | `Function` |
+| Name                                              | Description                                         | Type       |
+|---------------------------------------------------|-----------------------------------------------------|------------|
+| [`name`](#name)                                   | Name of the collection                              | `String`   |
+| [`directory`](#directory)                         | Directory of the Markdown files                     | `String`   |
+| [`includeSubdirectories`](#includesubdirectories) | If the collection should include nested directories | `Boolean`  |
+| [`routePrefix`](#routeprefix)                     | Prefix of the collection routes                     | `String`   |
+| [`serverTransform`](#servertransform)             | Function to transform the collection on the server  | `Function` |
+| [`clientTransform`](#clienttransform)             | Function to transform the collection on the client  | `Function` |
 
 #### `name`
 
@@ -211,9 +248,9 @@ Then the following routes would be generated:
 
 You may want to add properties to the front matter of your content, or change the order of a collection. `serverTransform` and `clientTransform` can be used to do this, on the server- and client-side respectively.
 
-Nuxt Markdown uses [`gray-matter`](https://github.com/jonschlinkert/gray-matter) to read the front matter and content of Markdown files on the server-side. `serverTransform` is a function, which takes the following parameters:
+Nuxt Markdown uses [gray-matter](https://github.com/jonschlinkert/gray-matter) to read the front matter and content of Markdown files on the server-side. `serverTransform` is a function, which takes the following parameters:
 
-- `collection`, an array of `file` objects from `gray-matter`. For more information about the `file` object, [see the documentation here](https://github.com/jonschlinkert/gray-matter#returned-object).
+- `collection`, an array of `file` objects from gray-matter. For more information about the `file` object, [see the documentation here](https://github.com/jonschlinkert/gray-matter#returned-object).
 
 - `helpers`, an object containing helper functions. Currently, this only includes:
 
@@ -235,7 +272,7 @@ Nuxt Markdown needs to serialize your front matter before injecting it into a Nu
 
 `clientTransform` takes no arguments. However, it must **return a function** which takes the parameter:
 
-- `collection`, an array of the front matter from your files (the [`data` property from `gray-matter`](https://github.com/jonschlinkert/gray-matter#returned-object)).
+- `collection`, an array of the front matter from your files (the [`data` property from gray-matter](https://github.com/jonschlinkert/gray-matter#returned-object)).
 
 The function **returned** by `clientTransform` should return the collection.
 
@@ -387,3 +424,31 @@ export default {
 }
 </script>
 ```
+
+## Development
+
+1. Clone this repository
+2. Install dependencies using `yarn install`
+3. Start development server using `yarn dev`
+
+## License
+
+[MIT License](./LICENSE)
+
+Copyright &copy; Greg Ives <greg@gregives.co.uk> (https://gregives.co.uk)
+
+<!-- Badges -->
+[npm-version-src]: https://img.shields.io/npm/v/nuxt-markdown/latest.svg
+[npm-version-href]: https://npmjs.com/package/nuxt-markdown
+
+[npm-downloads-src]: https://img.shields.io/npm/dt/nuxt-markdown.svg
+[npm-downloads-href]: https://npmjs.com/package/nuxt-markdown
+
+[github-actions-ci-src]: https://github.com/gregives/nuxt-markdown/workflows/ci/badge.svg
+[github-actions-ci-href]: https://github.com/gregives/nuxt-markdown/actions?query=workflow%3Aci
+
+[codecov-src]: https://img.shields.io/codecov/c/github/gregives/nuxt-markdown.svg
+[codecov-href]: https://codecov.io/gh/gregives/nuxt-markdown
+
+[license-src]: https://img.shields.io/npm/l/nuxt-markdown.svg
+[license-href]: https://npmjs.com/package/nuxt-markdown
