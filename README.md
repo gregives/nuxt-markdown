@@ -119,7 +119,7 @@ You can configure Nuxt Markdown in your `nuxt.config.js` by either passing optio
 
 ```js
 export default {
-  modules: [
+  buildModules: [
     ['nuxt-markdown', { collections: [] }]
   ],
   markdown: {
