@@ -7,6 +7,7 @@ module.exports = {
   modules: [
     { handler: require('../../lib/module') }
   ],
+  // Test router trailing slash
   router: {
     trailingSlash: true
   }

@@ -4,10 +4,10 @@
       Back
     </nuxt-link>
     <h1>{{ blogPost.title }}</h1>
-    <p>{{ blogPost.date.toLocaleDateString() }}</p>
+    <time :datetime="blogPost.date">{{ blogPost.date.toLocaleDateString() }}</time>
     <ul>
       <li v-for="tag in blogPost.tags" :key="tag">
-        {{ tag }}
+        #{{ tag }}
       </li>
     </ul>
     <component :is="content" />
@@ -18,6 +18,7 @@
 export default {
   asyncData ({ app }) {
     const blogPost = app.$markdown.loadData()
+    // Convert date into Date object, this can be done with `clientTransform` instead
     blogPost.date = new Date(blogPost.date)
 
     return {

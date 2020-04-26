@@ -2,7 +2,7 @@
   <main>
     <h1>My Blog Built with Nuxt Markdown</h1>
     <component :is="content" />
-    <ol>
+    <ol reversed>
       <li v-for="blogPost in blogPosts" :key="blogPost.path">
         <nuxt-link :to="blogPost.path">
           {{ blogPost.title }}
@@ -28,6 +28,7 @@ export default {
     this.content = () => this.$markdown.loadContent().then((component) => {
       return {
         ...component,
+        // Add async Counter component in Markdown content
         components: {
           Counter: () => import('~/components/Counter')
         }
