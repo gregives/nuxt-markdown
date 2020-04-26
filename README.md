@@ -120,10 +120,14 @@ You can configure Nuxt Markdown in your `nuxt.config.js` by either passing optio
 ```js
 export default {
   buildModules: [
-    ['nuxt-markdown', { collections: [] }]
+    ['nuxt-markdown', {
+      collections: [],
+      grayMatter: {}
+    }]
   ],
   markdown: {
-    collections: []
+    collections: [],
+    grayMatter: {}
   }
 }
 ```
@@ -274,7 +278,36 @@ Nuxt Markdown needs to serialize your front matter before injecting it into a Nu
 
 - `collection`, an array of the front matter from your files (the [`data` property from gray-matter](https://github.com/jonschlinkert/gray-matter#returned-object)).
 
-The function **returned** by `clientTransform` should return the collection.
+The function **returned** by `clientTransform` should return the collection. Check out [the example](#example) which should make it clear!
+
+### Configuring gray-matter
+
+Nuxt Markdown uses the default configuration of gray-matter. However, you can pass your own configuration to gray-matter, if for example, you want to take an excerpt from your Markdown content. Have a look at the [gray-matter documentation](https://github.com/jonschlinkert/gray-matter#options) for more information.
+
+Note that Nuxt Markdown only retains the `data` property from gray-matter, so you'll need to store the excerpt in data, using `serverTransform`.
+
+```js
+export default {
+  markdown: {
+    collections: [
+      {
+        name: 'blog',
+        includeSubdirectories: true,
+        serverTransform (collection) {
+          collection.forEach(({ data, excerpt }) => {
+            // Nuxt Markdown only retains the data from each collection
+            data.excerpt = excerpt
+          })
+          return collection
+        }
+      }
+    ],
+    grayMatter: {
+      excerpt: true
+    }
+  }
+}
+```
 
 ## Example
 
@@ -444,7 +477,7 @@ Copyright &copy; Greg Ives <greg@gregives.co.uk> (https://gregives.co.uk)
 [npm-downloads-src]: https://img.shields.io/npm/dt/nuxt-markdown.svg
 [npm-downloads-href]: https://npmjs.com/package/nuxt-markdown
 
-[github-actions-ci-src]: https://github.com/gregives/nuxt-markdown/workflows/ci/badge.svg
+[github-actions-ci-src]: https://img.shields.io/github/workflow/status/gregives/nuxt-markdown/ci
 [github-actions-ci-href]: https://github.com/gregives/nuxt-markdown/actions?query=workflow%3Aci
 
 [codecov-src]: https://img.shields.io/codecov/c/github/gregives/nuxt-markdown.svg
