@@ -6,6 +6,8 @@
 [![Codecov][codecov-src]][codecov-href]
 [![License][license-src]][license-href]
 
+**Nuxt Markdown is current in alpha but a full release is coming very soon!**
+
 > Nuxt Markdown is a simple but highly-configurable Nuxt.js module which allows you to use Markdown files for the content of your website. This makes it the perfect module to port your site over from Jekyll, or another static site generator.
 
 <details>
