@@ -1,6 +1,6 @@
 ---
 title: How to Build a Blog with Nuxt
-date: 20-02-2020
+date: 2020-02-20
 tags:
   - Blog
   - Nuxt

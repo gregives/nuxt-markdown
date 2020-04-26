@@ -1,6 +1,6 @@
 ---
 title: Another Post About Nuxt
-date: 16-03-2020
+date: 2020-03-16
 tags:
   - Another
   - Nuxt

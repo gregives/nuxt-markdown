@@ -1,6 +1,6 @@
 ---
 title: Another Blog Post
-date: 02-04-2020
+date: 2020-04-02
 tags:
   - Another
   - Blog

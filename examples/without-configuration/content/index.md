@@ -1,3 +1,7 @@
+---
+title: Index page
+---
+
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Eu feugiat pretium nibh ipsum consequat nisl. Vulputate dignissim suspendisse in est ante. Aliquam nulla facilisi cras fermentum odio eu feugiat pretium nibh.
 
 <Counter :initial="3" />

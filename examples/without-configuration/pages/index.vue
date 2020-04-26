@@ -16,7 +16,7 @@
 export default {
   asyncData ({ app }) {
     return {
-      blogPosts: app.$markdown.content.filter(file => file.path.startsWith('/blog/'))
+      blogPosts: app.$markdown.content
     }
   },
   data () {

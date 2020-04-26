@@ -1,6 +1,6 @@
 ---
 title: My First Blog Post
-date: 01-04-2020
+date: 2020-04-01
 tags:
   - First
   - Blog

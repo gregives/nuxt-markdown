@@ -38,6 +38,7 @@
     "eslint": "latest",
     "husky": "latest",
     "jest": "latest",
+    "jsdom": "^16.2.2",
     "nuxt": "^2.12.2",
     "standard-version": "latest"
   },
