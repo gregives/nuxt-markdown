@@ -5,7 +5,7 @@ describe('Nuxt Markdown with gray-matter excerpts', () => {
   let nuxt
 
   beforeAll(async () => {
-    ({ nuxt } = await setup(loadConfig(__dirname, '../../examples/graymatter-excerpts')))
+    ({ nuxt } = await setup(loadConfig(__dirname, '../../examples/gray-matter-excerpts')))
   }, 60000)
 
   afterAll(async () => {
