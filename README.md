@@ -23,6 +23,7 @@
         - [`routePrefix`](#routeprefix)
         - [`serverTransform`](#servertransform)
         - [`clientTransform`](#clienttransform)
+    - [Class name of the content component](#class-name-of-the-content-component)
     - [Configuring gray-matter](#configuring-gray-matter)
     - [Configuring markdown-it](#configuring-markdown-it)
     - [Custom Markdown parser](#custom-markdown-parser)
@@ -284,6 +285,26 @@ Nuxt Markdown needs to serialize your front matter before injecting it into a Nu
 - `collection`, an array of the front matter from your files (the [`data` property from gray-matter](https://github.com/jonschlinkert/gray-matter#returned-object)).
 
 The function **returned** by `clientTransform` should return the collection. Check out [the example](#example) which should make it clear!
+
+### Class Name of the Content Component
+
+By default, Nuxt Markdown puts `class="nuxt-markdown"` on the root element of the content component (returned from `loadContent()`). You can change this class name using the `contentClassName` option.
+
+```js
+export default {
+  markdown: {
+    contentClassName: 'my-amazing-markdown'
+  }
+}
+```
+
+Will render:
+
+```html
+<div class="my-amazing-markdown">
+  <!-- Markdown content here -->
+</div>
+```
 
 ### Configuring gray-matter
 
