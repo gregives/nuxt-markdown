@@ -17,7 +17,7 @@
   ],
   "main": "lib/module.js",
   "scripts": {
-    "dev": "nuxt examples/configuration-with-tags",
+    "dev": "nuxt examples/markdown-it-options",
     "lint": "eslint --ext .js,.vue .",
     "release": "yarn test && standard-version && git push --follow-tags && npm publish",
     "test": "yarn lint && jest"
@@ -36,6 +36,7 @@
     "babel-eslint": "latest",
     "babel-jest": "latest",
     "eslint": "latest",
+    "highlight.js": "^10.0.1",
     "husky": "latest",
     "jest": "latest",
     "jsdom": "^16.2.2",
