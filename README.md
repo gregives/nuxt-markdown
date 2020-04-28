@@ -23,6 +23,9 @@
         - [`routePrefix`](#routeprefix)
         - [`serverTransform`](#servertransform)
         - [`clientTransform`](#clienttransform)
+    - [Configuring gray-matter](#configuring-gray-matter)
+    - [Configuring markdown-it](#configuring-markdown-it)
+    - [Custom Markdown parser](#custom-markdown-parser)
 - [Example](#example)
 - [Development](#development)
 - [License](#license)
@@ -306,6 +309,51 @@ export default {
     ],
     grayMatter: {
       excerpt: true
+    }
+  }
+}
+```
+
+### Configuring markdown-it
+
+By default, Nuxt Markdown parses Markdown with [markdown-it](https://github.com/markdown-it/markdown-it). You can pass configuration to markdown-it using the `markdownIt` option:
+
+```js
+export default {
+  markdown: {
+    markdownIt: {
+      html: true,
+      xhtmlOut: true,
+      typographer: true
+    }
+  }
+}
+```
+
+See the [documentation for markdown-it configuration](https://github.com/markdown-it/markdown-it#init-with-presets-and-options) for more details.
+
+Alternatively, you can pass an instance of markdown-it to the `markdownIt` option. This is useful if you want to use markdown-it plugins.
+
+```js
+export default {
+  markdown: {
+    markdownIt: require('markdown-it')()
+                  .use(plugin1)
+                  .use(plugin2, options)
+                  .use(plugin3)
+  }
+}
+```
+
+### Custom Markdown parser
+
+You can also use a custom Markdown parser if you wish, instead of markdown-it. The `markdown` option expects a function which takes the Markdown source as its parameter and returns the compiled HTML.
+
+```js
+export default {
+  markdown: {
+    markdown(source) {
+      return compileMarkdownIntoHTML(source)
     }
   }
 }
