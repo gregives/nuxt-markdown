@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-beta.1](https://github.com/gregives/nuxt-markdown/compare/v1.0.0-beta...v1.0.0-beta.1) (2020-05-03)
+
+
+### Bug Fixes
+
+* generate.routes should always be a flat array ([4103201](https://github.com/gregives/nuxt-markdown/commit/41032010f55604112ab9b9a14e3aea7e69c085e9))
+
 ## 1.0.0-beta (2020-04-28)
 
 
