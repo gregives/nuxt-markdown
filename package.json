@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "frontmatter-markdown-loader": "^3.3.0",
+    "glob": "^7.1.6",
     "gray-matter": "^4.0.2"
   },
   "devDependencies": {
@@ -41,7 +42,8 @@
     "jest": "latest",
     "jsdom": "^16.2.2",
     "nuxt": "^2.12.2",
-    "standard-version": "latest"
+    "standard-version": "latest",
+    "typescript": "^3.8.3"
   },
   "publishConfig": {
     "access": "public"
